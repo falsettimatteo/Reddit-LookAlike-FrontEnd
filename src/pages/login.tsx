@@ -4,7 +4,7 @@ import { Form, Formik } from "formik";
 import { Wrapper } from "../components/wrapper";
 import { InputField } from "../components/inputField";
 import { Box, Button } from "@chakra-ui/react";
-import { useRegisterMutation } from "../generate/graphql";
+import { useLoginMutation } from "../generate/graphql";
 import { toErrorMap } from "../utils/toErrorMap";
 import { useRouter } from "next/router";
 import { NavBar } from "../components/NavBar";
@@ -13,22 +13,20 @@ interface registerProps {}
 
 // to create a mutation/query hook you paste the mutation/query in register.graphql and run "yarn gen" to create the mutation hooks
 
-const Register: React.FC<registerProps> = ({}) => {
+const Login: React.FC<{}> = ({}) => {
   const router = useRouter();
-  const [, register] = useRegisterMutation();
+  const [, login] = useLoginMutation();
   return (
     <Wrapper variant={"small"}>
       <Formik
         initialValues={{ username: "", password: "" }}
         onSubmit={async (values, { setErrors }) => {
-          const response = await register(values); //or regiater(username: values.username, password: values.password) per essere più precisi
-
-          if (response.data?.register.errors) {
-            setErrors(toErrorMap(response.data.register.errors));
+          const response = await login({ options: values });
+          if (response.data?.login.errors) {
+            setErrors(toErrorMap(response.data.login.errors));
           } else {
             router.push("/");
           }
-          return response;
         }}
       >
         {({ isSubmitting }) => (
@@ -43,7 +41,7 @@ const Register: React.FC<registerProps> = ({}) => {
               isLoading={isSubmitting}
               colorScheme="teal"
             >
-              Register
+              Login
             </Button>
           </Form>
         )}
@@ -52,4 +50,4 @@ const Register: React.FC<registerProps> = ({}) => {
   );
 };
 
-export default Register;
+export default Login;
