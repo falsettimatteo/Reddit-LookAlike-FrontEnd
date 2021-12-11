@@ -3,11 +3,13 @@ import React from "react";
 import { Form, Formik } from "formik";
 import { Wrapper } from "../components/wrapper";
 import { InputField } from "../components/inputField";
-import { Box, Button } from "@chakra-ui/react";
+import { Box, Button, Flex, Link } from "@chakra-ui/react";
 import { useLoginMutation } from "../generate/graphql";
 import { toErrorMap } from "../utils/toErrorMap";
 import { useRouter } from "next/router";
-import { NavBar } from "../components/NavBar";
+import { createUrqlClient } from "../utils/createUrqlClinet";
+import { withUrqlClient } from "next-urql";
+import NextLink from 'next/link';
 
 interface registerProps {}
 
@@ -19,9 +21,9 @@ const Login: React.FC<{}> = ({}) => {
   return (
     <Wrapper variant={"small"}>
       <Formik
-        initialValues={{ username: "", password: "" }}
+        initialValues={{ usernameOrEmail: "", password: "" }}
         onSubmit={async (values, { setErrors }) => {
-          const response = await login({ options: values });
+          const response = await login(values);
           if (response.data?.login.errors) {
             setErrors(toErrorMap(response.data.login.errors));
           } else {
@@ -31,10 +33,15 @@ const Login: React.FC<{}> = ({}) => {
       >
         {({ isSubmitting }) => (
           <Form>
-            <InputField name="username" label="Username" />
+            <InputField name="usernameOrEmail" placeholder="username or email" label="Username or emal" />
             <Box>
-              <InputField name="password" label="Password" />
+              <InputField name="password" placeholder="password" label="Password" type="password" />
             </Box>
+            <Flex mt={2}>
+            <NextLink href="/forgett-password" >
+              <Link ml='auto'>forget password?</Link>
+              </NextLink>
+              </Flex>
             <Button
               mt={4}
               type="submit"
@@ -50,4 +57,4 @@ const Login: React.FC<{}> = ({}) => {
   );
 };
 
-export default Login;
+export default withUrqlClient(createUrqlClient)(Login);

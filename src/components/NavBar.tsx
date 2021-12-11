@@ -1,12 +1,15 @@
 import { Box, Link, Flex, Button, color } from "@chakra-ui/react";
 import NextLink from "next/link";
 import { useLogoutMutation, useMeQuery } from "../generate/graphql";
+import { isServer } from "../utils/isServer";
 
 interface NavBarProps {}
 
 export const NavBar: React.FC<NavBarProps> = ({}) => {
   const [{ fetching: logoutFetching }, logout] = useLogoutMutation();
-  const [{ data, fetching }] = useMeQuery();
+  const [{ data, fetching }] = useMeQuery({
+    pause: isServer(),
+  });
   let body = null;
 
   if (fetching) {
@@ -34,6 +37,7 @@ export const NavBar: React.FC<NavBarProps> = ({}) => {
           isLoading={logoutFetching}
           onClick={() => {
             logout();
+           // window.location.href=window.location.href; //refresh the whole page
           }}
         >
           logout
