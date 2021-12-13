@@ -100,6 +100,12 @@ export type QueryGetPostArgs = {
   id: Scalars['Float'];
 };
 
+
+export type QueryGetPostsArgs = {
+  cursor?: InputMaybe<Scalars['String']>;
+  limit: Scalars['Int'];
+};
+
 export type User = {
   __typename?: 'User';
   createdAt: Scalars['String'];
@@ -169,7 +175,10 @@ export type RegisterMutationVariables = Exact<{
 
 export type RegisterMutation = { __typename?: 'Mutation', register: { __typename?: 'UserResponse', errors?: Array<{ __typename?: 'FieldError', field: string, message: string }> | null | undefined, user?: { __typename?: 'User', id: number, username: string } | null | undefined } };
 
-export type GetPostsQueryVariables = Exact<{ [key: string]: never; }>;
+export type GetPostsQueryVariables = Exact<{
+  limit: Scalars['Int'];
+  cursor?: InputMaybe<Scalars['String']>;
+}>;
 
 
 export type GetPostsQuery = { __typename?: 'Query', getPosts: Array<{ __typename?: 'Post', id: number, createdAt: string, updatedAt: string, title: string }> };
@@ -270,8 +279,8 @@ export function useRegisterMutation() {
   return Urql.useMutation<RegisterMutation, RegisterMutationVariables>(RegisterDocument);
 };
 export const GetPostsDocument = gql`
-    query GetPosts {
-  getPosts {
+    query GetPosts($limit: Int!, $cursor: String) {
+  getPosts(cursor: $cursor, limit: $limit) {
     id
     createdAt
     updatedAt
