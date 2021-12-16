@@ -9,7 +9,7 @@ import { toErrorMap } from "../utils/toErrorMap";
 import { useRouter } from "next/router";
 import { createUrqlClient } from "../utils/createUrqlClinet";
 import { withUrqlClient } from "next-urql";
-import NextLink from 'next/link';
+import NextLink from "next/link";
 
 interface registerProps {}
 
@@ -27,9 +27,9 @@ const Login: React.FC<{}> = ({}) => {
           if (response.data?.login.errors) {
             setErrors(toErrorMap(response.data.login.errors));
           } else {
-            if(typeof router.query.next === 'string'){
-            router.push(router.query.next);
-            }else{
+            if (typeof router.query.next === "string") {
+              router.push(router.query.next);
+            } else {
               router.push("/");
             }
           }
@@ -37,15 +37,24 @@ const Login: React.FC<{}> = ({}) => {
       >
         {({ isSubmitting }) => (
           <Form>
-            <InputField name="usernameOrEmail" placeholder="username or email" label="Username or emal" />
+            <InputField
+              name="usernameOrEmail"
+              placeholder="username or email"
+              label="Username or emal"
+            />
             <Box>
-              <InputField name="password" placeholder="password" label="Password" type="password" />
+              <InputField
+                name="password"
+                placeholder="password"
+                label="Password"
+                type="password"
+              />
             </Box>
             <Flex mt={2}>
-            <NextLink href="/forgett-password" >
-              <Link ml='auto'>forget password?</Link>
+              <NextLink href="/forgett-password">
+                <Link ml="auto">forget password?</Link>
               </NextLink>
-              </Flex>
+            </Flex>
             <Button
               mt={4}
               type="submit"

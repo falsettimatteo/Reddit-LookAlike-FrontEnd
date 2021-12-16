@@ -14,19 +14,21 @@ interface registerProps {}
 
 // to create a mutation/query hook you paste the mutation/query in register.graphql and run "yarn gen" to create the mutation hooks
 
-const Register: React.FC<registerProps> = ({}) => {
+const Register: React.FC<{}> = ({}) => {
   const router = useRouter();
   const [, register] = useRegisterMutation();
+
   return (
     <Wrapper variant={"small"}>
       <Formik
-        initialValues={{ email: "", username: "", password: "" }}
+        initialValues={{ username: "", email: "", password: "" }}
         onSubmit={async (values, { setErrors }) => {
           const response = await register({ options: values }); //or regiater(username: values.username, password: values.password) per essere più precisi
 
           if (response.data?.register.errors) {
             setErrors(toErrorMap(response.data.register.errors));
           } else {
+
             router.push("/");
           }
           return response;
