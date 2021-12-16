@@ -1,27 +1,72 @@
 import { withUrqlClient } from "next-urql";
-import React from "react";
+import React, { useState } from "react";
 import { Layout } from "../components/Layout";
-import { NavBar } from "../components/NavBar";
 import { useGetPostsQuery } from "../generate/graphql";
 import { createUrqlClient } from "../utils/createUrqlClinet";
 import NextLink from "next/link";
-import { Link } from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  Flex,
+  Heading,
+  Link,
+  Stack,
+  Text,
+} from "@chakra-ui/react";
 
 const Index = () => {
-  const [{data}] = useGetPostsQuery({
-    variables: {
-      limit: 10,
-    }
+  const [variables, setVariables] = useState({
+    limit: 33,
+    cursor: null as null | string,
   });
+  const [{ data, fetching }] = useGetPostsQuery({
+    variables: variables,
+  }); 
+
+  // if (!fetching && !data) {
+  //   console.log(fetching);
+  //   return <div>Query error - no data</div>;
+  // }
   return (
     <Layout>
-      <NextLink href="/create-post">
-      <Link>create post</Link>
-      </NextLink>
+      <Flex align="center">
+        <Heading>Reddit Clone</Heading>
+        <NextLink href="/create-post">
+          <Link ml="auto">create post</Link>
+        </NextLink>
+      </Flex>
       <br />
-      {!data ? null : data.getPosts.map(p => <div key={p.id}>{p.title}</div>)}
-    </ Layout>
+      {!data && fetching ? (
+        <div>Loading...</div>
+      ) : (
+        <Stack spacing={8}>
+          {data!.getPosts.posts.map((p) => (
+            <Box key={p.id} p={5} shadow="md" borderWidth="1px">
+              <Heading fontSize="xl">{p.title}</Heading>
+              <Text mt={4}>{p.textSnippet}</Text>
+            </Box>
+          ))}
+        </Stack>
+      )}
+      {data && data.getPosts.hasMore ? (
+        <Flex>
+          <Button
+            onClick={() => {
+              setVariables({
+                limit: variables.limit,
+                cursor: data.getPosts.posts[data.getPosts.posts.length - 1].createdAt,
+              });
+            }}
+            isLoading={fetching}
+            m="auto"
+            my={8}
+          >
+            load more
+          </Button>
+        </Flex>
+      ) : null}
+    </Layout>
   );
-  };
+};
 
 export default withUrqlClient(createUrqlClient)(Index);
