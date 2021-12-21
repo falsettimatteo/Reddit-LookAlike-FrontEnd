@@ -9,24 +9,28 @@ import {
   Button,
   Flex,
   Heading,
-  Link,
   Stack,
+  Link,
   Text,
+  IconButton,
 } from "@chakra-ui/react";
+
+import {ChevronUpIcon, ChevronDownIcon} from '@chakra-ui/icons'
+import { UpdootSection } from "../components/UpdootSection";
 
 const Index = () => {
   const [variables, setVariables] = useState({
-    limit: 33,
+    limit: 15,
     cursor: null as null | string,
   });
   const [{ data, fetching }] = useGetPostsQuery({
     variables: variables,
-  }); 
+  });
 
-  // if (!fetching && !data) {
-  //   console.log(fetching);
-  //   return <div>Query error - no data</div>;
-  // }
+  if (!fetching && !data) {
+    console.log(fetching);
+    return <div>Query error - no data</div>;
+  }
   return (
     <Layout>
       <Flex align="center">
@@ -41,10 +45,14 @@ const Index = () => {
       ) : (
         <Stack spacing={8}>
           {data!.getPosts.posts.map((p) => (
-            <Box key={p.id} p={5} shadow="md" borderWidth="1px">
-              <Heading fontSize="xl">{p.title}</Heading>
-              <Text mt={4}>{p.textSnippet}</Text>
-            </Box>
+            <Flex key={p.id} p={5} shadow="md" borderWidth="1px">
+              <UpdootSection post={p} />
+              <Box>
+                <Heading fontSize="xl">{p.title}</Heading>
+                <Text>Posted by: {p.creator.username}</Text>
+                <Text mt={4}>{p.textSnippet}</Text>
+              </Box>
+            </Flex>
           ))}
         </Stack>
       )}
@@ -54,7 +62,8 @@ const Index = () => {
             onClick={() => {
               setVariables({
                 limit: variables.limit,
-                cursor: data.getPosts.posts[data.getPosts.posts.length - 1].createdAt,
+                cursor:
+                  data.getPosts.posts[data.getPosts.posts.length - 1].createdAt,
               });
             }}
             isLoading={fetching}
