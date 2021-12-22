@@ -1,5 +1,6 @@
 import { Box, Link, Flex, Button, color } from "@chakra-ui/react";
 import NextLink from "next/link";
+import { useRouter } from "next/router";
 import { useLogoutMutation, useMeQuery } from "../generate/graphql";
 import { isServer } from "../utils/isServer";
 
@@ -10,6 +11,7 @@ export const NavBar: React.FC<NavBarProps> = ({}) => {
   const [{ data, fetching }] = useMeQuery({
     pause: isServer(),
   });
+  const router = useRouter();
   let body = null;
 
   if (fetching) {
@@ -46,7 +48,7 @@ export const NavBar: React.FC<NavBarProps> = ({}) => {
     );
   }
   return (
-    <Flex position="sticky" top={0} zIndex={1} bg="teal" p={4} ml="auto">
+    <Flex position="sticky" top={0} zIndex={1} bg='teal' p={4} ml="auto">
       <Box ml={"auto"}>{body}</Box>
     </Flex>
   );

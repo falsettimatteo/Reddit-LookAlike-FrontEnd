@@ -31,11 +31,13 @@ const Login: React.FC<{}> = ({}) => {
               router.push(router.query.next);
             } else {
               router.push("/");
+              
             }
           }
         }}
       >
         {({ isSubmitting }) => (
+          
           <Form>
             <InputField
               name="usernameOrEmail"
