@@ -11,11 +11,9 @@ import {
   Heading,
   Stack,
   Link,
-  Text,
-  IconButton,
+  Text
 } from "@chakra-ui/react";
 
-import {ChevronUpIcon, ChevronDownIcon} from '@chakra-ui/icons'
 import { UpdootSection } from "../components/UpdootSection";
 
 const Index = () => {
