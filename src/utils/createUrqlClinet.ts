@@ -16,6 +16,9 @@ import router from "next/router";
 
 import { stringifyVariables } from "@urql/core";
 import { gql } from "@urql/core";
+import { isServer } from "./isServer";
+import { SSRExchange } from "next-urql";
+import { NextPageContext } from "next";
 
 const errorExchange: Exchange =
   ({ forward }) =>
@@ -69,10 +72,21 @@ export const cursorPagination = (): Resolver => {
   };
 };
 
-export const createUrqlClient = (ssrExchange: any) => ({
+export const createUrqlClient = (ssrExchange: any, ctx:any) =>{ 
+ 
+  
+  let cookie = '';
+   if(isServer()){
+    // console.log(ctx.req.headers.cookie);
+   cookie = ctx.req.headers.cookie;
+   }
+  return  {
   url: "http://localhost:5000/graphql",
   fetchOptions: {
     credentials: "include" as const,
+     headers: cookie ?{
+       cookie,
+     } : undefined,
   },
   exchanges: [
     dedupExchange,
@@ -173,4 +187,4 @@ export const createUrqlClient = (ssrExchange: any) => ({
     ssrExchange,
     fetchExchange,
   ],
-});
+}};

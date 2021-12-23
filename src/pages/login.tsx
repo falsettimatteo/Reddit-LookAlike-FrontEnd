@@ -11,6 +11,8 @@ import { createUrqlClient } from "../utils/createUrqlClinet";
 import { withUrqlClient } from "next-urql";
 import NextLink from "next/link";
 
+import Router from 'next/router';
+
 interface registerProps {}
 
 // to create a mutation/query hook you paste the mutation/query in register.graphql and run "yarn gen" to create the mutation hooks
@@ -30,8 +32,9 @@ const Login: React.FC<{}> = ({}) => {
             if (typeof router.query.next === "string") {
               router.push(router.query.next);
             } else {
-              router.push("/");
-              
+            //router.push("/");
+              window.location.href= "/"
+
             }
           }
         }}
