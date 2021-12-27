@@ -1,9 +1,9 @@
-import React from "react";
+import React, { useState } from "react";
 
 import { Form, Formik } from "formik";
 import { Wrapper } from "../components/wrapper";
 import { InputField } from "../components/inputField";
-import { Box, Button, Flex, Link } from "@chakra-ui/react";
+import { Box, Button, Flex, Link, useForceUpdate } from "@chakra-ui/react";
 import { useLoginMutation } from "../generate/graphql";
 import { toErrorMap } from "../utils/toErrorMap";
 import { useRouter } from "next/router";
@@ -12,6 +12,7 @@ import { withUrqlClient } from "next-urql";
 import NextLink from "next/link";
 
 import Router from 'next/router';
+import { render } from "react-dom";
 
 interface registerProps {}
 
@@ -25,15 +26,18 @@ const Login: React.FC<{}> = ({}) => {
       <Formik
         initialValues={{ usernameOrEmail: "", password: "" }}
         onSubmit={async (values, { setErrors }) => {
+        
           const response = await login(values);
+          //await router.prefetch("/");
           if (response.data?.login.errors) {
             setErrors(toErrorMap(response.data.login.errors));
           } else {
             if (typeof router.query.next === "string") {
               router.push(router.query.next);
             } else {
-            //router.push("/");
-              window.location.href= "/"
+             // router.push("/");
+            window.location.href= "/";
+              
 
             }
           }
@@ -76,3 +80,4 @@ const Login: React.FC<{}> = ({}) => {
 };
 
 export default withUrqlClient(createUrqlClient)(Login);
+

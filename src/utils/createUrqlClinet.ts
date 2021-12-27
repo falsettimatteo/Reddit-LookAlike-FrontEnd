@@ -7,6 +7,9 @@ import {
   LoginMutation,
   RegisterMutation,
   VoteMutationVariables,
+  GetPostsDocument,
+  GetPostsQuery,
+  DeletePostMutationVariables,
 } from "../generate/graphql";
 import { betterUpdateQuery } from "./betterUpdateQuery";
 
@@ -17,8 +20,7 @@ import router from "next/router";
 import { stringifyVariables } from "@urql/core";
 import { gql } from "@urql/core";
 import { isServer } from "./isServer";
-import { SSRExchange } from "next-urql";
-import { NextPageContext } from "next";
+
 
 const errorExchange: Exchange =
   ({ forward }) =>
@@ -75,19 +77,19 @@ export const cursorPagination = (): Resolver => {
 export const createUrqlClient = (ssrExchange: any, ctx:any) =>{ 
  
   
-  let cookie = '';
-   if(isServer()){
-    // console.log(ctx.req.headers.cookie);
-   cookie = ctx.req.headers.cookie;
-   }
+   let cookie = '';
+    if(ctx){
+     // console.log(ctx.req.headers.cookie);
+    cookie = ctx?.req?.headers?.cookie;
+    }
   return  {
   url: "http://localhost:5000/graphql",
   fetchOptions: {
     credentials: "include" as const,
-     headers: cookie ?{
-       cookie,
-     } : undefined,
-  },
+       headers: cookie ?{
+         cookie,
+        } : undefined,
+     },
   exchanges: [
     dedupExchange,
     cacheExchange({
@@ -102,6 +104,12 @@ export const createUrqlClient = (ssrExchange: any, ctx:any) =>{
       //this function are used to reload the query and update the react components
       updates: {
         Mutation: {
+          deletePost: (_result, args, cache, info) => {
+            cache.invalidate({
+              __typename: "Post",
+              id: (args as DeletePostMutationVariables).id
+            });
+          },
           vote: (_result, args, cache, info) => {
             const { postId, value } = args as VoteMutationVariables;
 
@@ -163,6 +171,7 @@ export const createUrqlClient = (ssrExchange: any, ctx:any) =>{
                 }
               }
             );
+
           },
           register: (_result, args, cache, info) => {
             betterUpdateQuery<RegisterMutation, MeQuery>(

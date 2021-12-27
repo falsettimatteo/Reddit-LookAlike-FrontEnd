@@ -29,7 +29,8 @@ const Register: React.FC<{}> = ({}) => {
             setErrors(toErrorMap(response.data.register.errors));
           } else {
 
-            router.push("/");
+           // router.push("/");
+           window.location.href = "/";
           }
           return response;
         }}
@@ -58,4 +59,4 @@ const Register: React.FC<{}> = ({}) => {
   );
 };
 
-export default withUrqlClient(createUrqlClient, {ssr: true})(Register);
+export default withUrqlClient(createUrqlClient, {ssr: false})(Register);
