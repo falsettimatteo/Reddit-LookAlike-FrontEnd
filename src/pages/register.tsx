@@ -29,8 +29,7 @@ const Register: React.FC<{}> = ({}) => {
             setErrors(toErrorMap(response.data.register.errors));
           } else {
 
-           // router.push("/");
-           window.location.href = "/";
+            router.push("/");
           }
           return response;
         }}

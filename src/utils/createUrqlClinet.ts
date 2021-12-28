@@ -1,5 +1,5 @@
 import { dedupExchange, fetchExchange } from "urql";
-import { cacheExchange, Resolver } from "@urql/exchange-graphcache";
+import { Cache, cacheExchange, Resolver } from "@urql/exchange-graphcache";
 import {
   LogoutMutation,
   MeQuery,
@@ -74,6 +74,16 @@ export const cursorPagination = (): Resolver => {
   };
 };
 
+function invalidateAllPosts(cache: Cache) {
+  const allFields = cache.inspectFields("Query");
+            const fieldInfos = allFields.filter(
+              (info) => info.fieldName === "getPosts"
+            );
+            fieldInfos.forEach((fi) => {
+              cache.invalidate("Query", "getPosts", fi.arguments || {});
+            });
+}
+
 export const createUrqlClient = (ssrExchange: any, ctx:any) =>{ 
  
   
@@ -139,13 +149,7 @@ export const createUrqlClient = (ssrExchange: any, ctx:any) =>{
             }
           },
           createPost: (_result, args, cache, info) => {
-            const allFields = cache.inspectFields("Query");
-            const fieldInfos = allFields.filter(
-              (info) => info.fieldName === "getPosts"
-            );
-            fieldInfos.forEach((fi) => {
-              cache.invalidate("Query", "getPosts", fi.arguments || {});
-            });
+            invalidateAllPosts(cache);
           },
           logout: (_result, args, cache, info) => {
             //refresh the query logout to set me to null
@@ -171,7 +175,7 @@ export const createUrqlClient = (ssrExchange: any, ctx:any) =>{
                 }
               }
             );
-
+              invalidateAllPosts(cache);
           },
           register: (_result, args, cache, info) => {
             betterUpdateQuery<RegisterMutation, MeQuery>(

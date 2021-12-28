@@ -44,7 +44,7 @@ export const NavBar: React.FC<NavBarProps> = ({}) => {
           isLoading={logoutFetching}
           onClick={async() => {
            await logout();
-           window.location.href= "/"; //refresh the whole page
+           router.reload(); //refresh the whole page
 
           }}
         >

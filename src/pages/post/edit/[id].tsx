@@ -39,7 +39,7 @@ const EditPost = ({}) => {
         initialValues={{ title: data.getPost.title, text: data.getPost.text }}
         onSubmit={async (values) => {
           await updatePost({ id: IntId, ...values });
-         router.push("/");
+         router.back();
         }}
       >
         {({ isSubmitting }) => (
