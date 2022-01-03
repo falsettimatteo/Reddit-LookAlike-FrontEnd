@@ -4,12 +4,13 @@ import { Wrapper } from "./wrapper";
 
 interface LayoutProps {
   variant?: "small" | "regular";
+  postsViewButton: "allPosts" | "myPosts"
 }
 
-export const Layout: React.FC<LayoutProps> = ({ children, variant }) => {
+export const Layout: React.FC<LayoutProps> = ({ children, variant, postsViewButton }) => {
   return (
     <>
-      <NavBar />
+      <NavBar postsViewButton={postsViewButton} />
       <Wrapper variant={variant}>{children}</Wrapper>
     </>
   );

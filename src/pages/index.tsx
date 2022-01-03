@@ -20,7 +20,7 @@ import { createUrqlClient } from "../utils/createUrqlClinet";
 
 const Index: React.FC<{}> = ({}) => {
   const [variables, setVariables] = useState({
-    limit: 15,
+    limit: 10,
     cursor: null as null | string,
   });
   const [{ data, fetching }] = useGetPostsQuery({
@@ -33,7 +33,7 @@ const Index: React.FC<{}> = ({}) => {
     return <div>Query error - no data</div>;
   }
   return (
-    <Layout>
+    <Layout postsViewButton="allPosts">
       {!data && fetching ? (
         <div>Loading...</div>
       ) : (

@@ -1,0 +1,8 @@
+query GetUserPosts($userId: Int!, $limit: Int!, $cursor: String) {
+  getUserPosts(userId: $userId ,cursor: $cursor, limit: $limit) {
+    hasMore
+    posts {
+      ...PostSnippet
+    }
+  }
+}
