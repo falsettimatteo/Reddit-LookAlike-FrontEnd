@@ -12,7 +12,6 @@ import { withUrqlClient } from "next-urql";
 
 interface registerProps {}
 
-// to create a mutation/query hook you paste the mutation/query in register.graphql and run "yarn gen" to create the mutation hooks
 
 const Register: React.FC<{}> = ({}) => {
   const router = useRouter();
@@ -23,7 +22,7 @@ const Register: React.FC<{}> = ({}) => {
       <Formik
         initialValues={{ username: "", email: "", password: "" }}
         onSubmit={async (values, { setErrors }) => {
-          const response = await register({ options: values }); //or regiater(username: values.username, password: values.password) per essere più precisi
+          const response = await register({ options: values }); 
 
           if (response.data?.register.errors) {
             setErrors(toErrorMap(response.data.register.errors));

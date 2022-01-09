@@ -16,7 +16,6 @@ import { render } from "react-dom";
 
 interface registerProps {}
 
-// to create a mutation/query hook you paste the mutation/query in register.graphql and run "yarn gen" to create the mutation hooks
 
 const Login: React.FC<{}> = ({}) => {
   const router = useRouter();
@@ -28,7 +27,6 @@ const Login: React.FC<{}> = ({}) => {
         onSubmit={async (values, { setErrors }) => {
         
           const response = await login(values);
-          //await router.prefetch("/");
           if (response.data?.login.errors) {
             setErrors(toErrorMap(response.data.login.errors));
           } else {
